@@ -11,7 +11,7 @@ import { viewports } from '../../fixtures/testData';
 for (const vp of viewports) {
   test(`renders correctly at ${vp.width}x${vp.height} (${vp.label})`, async ({ page }) => {
     await page.setViewportSize({ width: vp.width, height: vp.height });
-    await page.goto('/');
+    await page.goto('/docs');
     await page.waitForLoadState('domcontentloaded');
 
     // Body must exist
