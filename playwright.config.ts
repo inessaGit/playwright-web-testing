@@ -19,7 +19,7 @@ export default defineConfig({
     ['list'],
   ],
   use: {
-    baseURL: process.env.BASE_URL || 'https://managexr.com',
+    baseURL: process.env.BASE_URL || 'https://code.claude.com',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
