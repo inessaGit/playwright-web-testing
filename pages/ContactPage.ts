@@ -13,7 +13,7 @@ export class ContactPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.mainContent   = page.locator('main, [role="main"], article').first();
+    this.mainContent   = page.locator('main, [role="main"], article, #content-area').first();
     this.codeBlocks    = page.locator('pre code, pre, code');
     this.headings      = page.locator('h1, h2, h3');
     this.internalLinks = page.locator('a[href^="/"]');
