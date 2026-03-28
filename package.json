@@ -1,0 +1,22 @@
+{
+  "name": "playwright-web-testing",
+  "version": "1.0.0",
+  "description": "E2E Playwright tests for managexr.com — TypeScript + POM",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:smoke": "npx playwright test tests/smoke/",
+    "test:headed": "npx playwright test --headed",
+    "test:ui": "npx playwright test --ui",
+    "test:chromium": "npx playwright test --project=chromium",
+    "report": "npx playwright show-report",
+    "allure:generate": "npx allure generate allure-results --clean -o allure-report",
+    "allure:open": "npx allure open allure-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.43.1",
+    "@types/node": "^20.11.30",
+    "allure-playwright": "^3.0.0-beta.5",
+    "dotenv": "^16.4.5",
+    "typescript": "^5.4.3"
+  }
+}
