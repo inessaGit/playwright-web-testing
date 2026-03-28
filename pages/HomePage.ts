@@ -2,52 +2,32 @@ import { Page, Locator } from '@playwright/test';
 import { BasePage } from './BasePage';
 
 export class HomePage extends BasePage {
-  readonly heroHeading: Locator;
-  readonly ctaButton: Locator;
-  readonly navPricing: Locator;
-  readonly navFeatures: Locator;
-  readonly navBar: Locator;
-  readonly footer: Locator;
+  readonly heroHeading:  Locator;
+  readonly navBar:       Locator;
+  readonly footer:       Locator;
 
   constructor(page: Page) {
     super(page);
     this.heroHeading = page.locator('h1').first();
-    this.ctaButton = page
-      .getByRole('link', { name: /get started|request demo/i })
-      .first();
-    this.navPricing = page
-      .getByRole('navigation')
-      .getByRole('link', { name: /pricing/i });
-    this.navFeatures = page
-      .getByRole('navigation')
-      .getByRole('link', { name: /features/i });
-    this.navBar = page.getByRole('navigation').first();
-    this.footer = page.getByRole('contentinfo');
+    this.navBar      = page.locator('nav, [role="navigation"]').first();
+    this.footer      = page.locator('footer, [role="contentinfo"]').first();
   }
 
-  /**
-   * Navigate to the home page and wait for it to load.
-   */
   async goto(): Promise<void> {
-    await this.page.goto('/');
+    await this.page.goto('/docs');
     await this.waitForLoad();
   }
 
-  /**
-   * Click the Pricing link in the top navigation and wait for navigation.
-   */
-  async clickPricing(): Promise<void> {
-    await this.navPricing.click();
-    await this.page.waitForURL('**/pricing**');
-    await this.waitForLoad();
-  }
-
-  /**
-   * Click the Features link in the top navigation and wait for navigation.
-   */
-  async clickFeatures(): Promise<void> {
-    await this.navFeatures.click();
-    await this.page.waitForURL('**/features**');
-    await this.waitForLoad();
+  /** Returns the first nav link that points to a distinct page (not '#' anchors). */
+  async firstNavLink(): Promise<Locator | null> {
+    const links = this.navBar.locator('a[href]');
+    const count = await links.count();
+    for (let i = 0; i < count; i++) {
+      const href = await links.nth(i).getAttribute('href');
+      if (href && href !== '#' && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+        return links.nth(i);
+      }
+    }
+    return null;
   }
 }
