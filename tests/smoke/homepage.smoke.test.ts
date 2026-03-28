@@ -2,53 +2,42 @@ import { test, expect } from '@playwright/test';
 import { HomePage } from '../../pages/HomePage';
 import { assertVisible } from '../../utils/assertions';
 
-test.describe('Smoke — Home Page', () => {
-  test('page loads with HTTP 200', async ({ page, request }) => {
-    const baseURL = page.context().browser()?.contexts()[0]?.pages()[0]?.url() || 'https://managexr.com';
-    const url = process.env.BASE_URL || 'https://managexr.com';
-    const response = await request.get(url);
+test.describe('Smoke — Docs Home Page', () => {
+
+  test('page loads with HTTP 200', async ({ request }) => {
+    const base = process.env.BASE_URL || 'https://code.claude.com';
+    const response = await request.get(`${base}/docs`);
     expect(response.status()).toBe(200);
   });
 
-  test('page title contains ManageXR', async ({ page }) => {
+  test('page title contains "Claude"', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
     const title = await homePage.getTitle();
-    expect(title).toMatch(/managexr/i);
+    expect(title).toMatch(/claude/i);
   });
 
-  test('hero section is visible — heading and CTA button present', async ({ page }) => {
+  test('h1 heading is visible and non-empty', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
-
-    await assertVisible(homePage.heroHeading, 'Hero H1 heading');
-    const headingText = await homePage.heroHeading.textContent();
-    expect(headingText?.trim().length).toBeGreaterThan(0);
-
-    await assertVisible(homePage.ctaButton, 'Hero CTA button (Get Started / Request Demo)');
+    await assertVisible(homePage.heroHeading, 'H1 heading');
+    const text = await homePage.heroHeading.textContent();
+    expect(text?.trim().length, 'h1 should not be empty').toBeGreaterThan(0);
   });
 
-  test('navigation bar renders', async ({ page }) => {
+  test('navigation bar renders with at least one link', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
-
-    await assertVisible(homePage.navBar, 'Top navigation bar');
-    // At least one link should be present inside the nav
-    const navLinks = homePage.navBar.getByRole('link');
-    const linkCount = await navLinks.count();
-    expect(linkCount, 'Navigation should contain at least one link').toBeGreaterThanOrEqual(1);
+    await assertVisible(homePage.navBar, 'Navigation bar');
+    const count = await homePage.navBar.locator('a').count();
+    expect(count, 'Nav should contain at least one link').toBeGreaterThanOrEqual(1);
   });
 
-  test('footer renders', async ({ page }) => {
+  test('page has non-empty body content', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
-
-    await homePage.scrollToBottom();
-    await assertVisible(homePage.footer, 'Page footer');
-
-    // Footer should contain at least one link
-    const footerLinks = homePage.footer.getByRole('link');
-    const linkCount = await footerLinks.count();
-    expect(linkCount, 'Footer should contain at least one link').toBeGreaterThanOrEqual(1);
+    const text = await page.locator('body').textContent();
+    expect(text?.trim().length, 'Body should have content').toBeGreaterThan(50);
   });
+
 });
