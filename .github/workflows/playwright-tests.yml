@@ -34,7 +34,7 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test --project=${{ matrix.project }}
         env:
-          BASE_URL: https://managexr.com
+          BASE_URL: https://code.claude.com
           CI: true
           HEADLESS: true
 
