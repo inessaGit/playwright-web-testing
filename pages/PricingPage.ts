@@ -13,8 +13,8 @@ export class PricingPage extends BasePage {
   constructor(page: Page) {
     super(page);
     this.pageHeading  = page.locator('h1, h2').first();
-    this.contentLinks = page.locator('main a[href], article a[href], [role="main"] a[href]');
-    this.paragraphs   = page.locator('main p, article p, [role="main"] p');
+    this.contentLinks = page.locator('main a[href], article a[href], [role="main"] a[href], #content-area a[href]');
+    this.paragraphs   = page.locator('main p, article p, [role="main"] p, #content-area p');
   }
 
   async goto(): Promise<void> {
