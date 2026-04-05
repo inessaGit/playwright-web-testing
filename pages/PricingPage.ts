@@ -1,5 +1,5 @@
-import { Page, Locator } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { Page, Locator } from "@playwright/test";
+import { BasePage } from "./BasePage";
 
 /**
  * Represents any docs section page.
@@ -12,13 +12,14 @@ export class PricingPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.pageHeading  = page.locator('h1, h2').first();
-    this.contentLinks = page.locator('main a[href], article a[href], [role="main"] a[href]');
-    this.paragraphs   = page.locator('main p, article p, [role="main"] p');
+    this.pageHeading  = page.locator("h1, h2").first();
+    // Broaden to all links on page, since docs uses div-based layout (no <main>/<article>)
+    this.contentLinks = page.locator("a[href]").filter({ hasNotText: /^$/ });
+    this.paragraphs   = page.locator("p, li");
   }
 
   async goto(): Promise<void> {
-    await this.page.goto('/docs');
+    await this.page.goto("/docs");
     await this.waitForLoad();
   }
 }
